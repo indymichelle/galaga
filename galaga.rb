@@ -37,16 +37,25 @@ class Galaga < Gosu::Window
       @player_x += 3
     end
     
+    if @player_x <=0
+      @player_x = 0
+    end
+
+    if @player_x >= 640 - 19
+      @player_x = 640-19
+    end
+    
     @shots.each do |shot|
       shot.y -=5  
       if shot.y <=0
         @shots.delete(shot)
       end
     end
+
   end
   
   def shoot
-    @shots.push(Shot.new(@player_x+8, 480-19))
+    @shots.push(Shot.new(@player_x+9, 480-19))
     @shot_sound.play 
   end
 
@@ -61,11 +70,9 @@ class Galaga < Gosu::Window
 
   def draw
     @ship_image.draw(@player_x,480-19,0)
-  
     @shots.each do |shot|
       @shot_image.draw(shot.x, shot.y,0) #shot image
     end 
-    
   end
 end
 
