@@ -3,16 +3,26 @@ Bundler.require(:default)
 
 
 puts "Starting up!"
+class Shot
+  attr_accessor  :x, :y
+  def initialize(x,y)
+    @x=x
+    @y=y
+  end
+end
 
 class Galaga < Gosu::Window
   def initialize
     super(640, 480, false)
     self.caption = "Galaga"
-
+    
+    @shots = []
+    @theme = Gosu::Sample.new(self, "Theme.mp3")
     @shot_sound = Gosu::Sample.new(self, "shot_sound.mp3")
     @ship_image = Gosu::Image.new(self, "ship.png" , true)
     @shot_image = Gosu::Image.new(self, "shot.png" , true)
     @player_x = 320
+    @theme.play
   end
   
   def update
@@ -26,30 +36,36 @@ class Galaga < Gosu::Window
     if button_down? Gosu::KbRight
       @player_x += 3
     end
-    if button_down? Gosu::KbSpace
-      if @shot_x == nil
-        shoot
-      end
-    end
-    if @shot_x
-      @shot_y -=5  
-      if @shot_y <= 0
-        @shot_x = nil
+    
+    @shots.each do |shot|
+      shot.y -=5  
+      if shot.y <=0
+        @shots.delete(shot)
       end
     end
   end
   
   def shoot
-    @shot_x = @player_x+8
-    @shot_y = 480-19
+    @shots.push(Shot.new(@player_x+8, 480-19))
     @shot_sound.play 
+  end
+
+  def button_down(id)
+    case id
+    when Gosu::KbSpace
+      if @shots.size <3 
+        shoot
+      end
+    end
   end
 
   def draw
     @ship_image.draw(@player_x,480-19,0)
-    if @shot_x
-      @shot_image.draw(@shot_x, @shot_y,0) #shot image
-    end
+  
+    @shots.each do |shot|
+      @shot_image.draw(shot.x, shot.y,0) #shot image
+    end 
+    
   end
 end
 
