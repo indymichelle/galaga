@@ -58,6 +58,11 @@ class Enemy < Sprite
     @image = Gosu::Image.new(window, "red-ship.png", true)
     super
   end
+
+  def update
+    @x += Math.sin(Time.now.to_f * 6) * 4
+    @y += Math.cos(Time.now.to_f * 4) * 4
+  end
 end
 
 
