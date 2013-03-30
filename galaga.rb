@@ -12,6 +12,8 @@ class Sprite
   def draw
     @image.draw(@x, @y,0)
   end
+  def update
+  end
 end
 
 class Shot < Sprite
@@ -25,8 +27,8 @@ class Shot < Sprite
       @window.shots.delete(self)
     end
   end
-
 end
+
 class Player < Sprite
   def initialize(x,y, window)
     @image = Gosu::Image.new(window, "ship.png" , true)
@@ -51,6 +53,14 @@ class Player < Sprite
   end
 end
 
+class Enemy < Sprite
+  def initialize(x,y,window)
+    @image = Gosu::Image.new(window, "red-ship.png", true)
+    super
+  end
+end
+
+
 
 
 class Galaga < Gosu::Window
@@ -63,6 +73,7 @@ class Galaga < Gosu::Window
     @theme = Gosu::Sample.new(self, "Theme.mp3")
     @shot_sound = Gosu::Sample.new(self, "shot_sound.mp3")
     @player1 = Player.new(320, 480-19, self)
+    @enemy1 = Enemy.new(320, 320,self)
     @theme.play
   end
 
@@ -75,6 +86,7 @@ class Galaga < Gosu::Window
       shot.update
     end
 
+    @enemy1.update
     @player1.update
   end
 
@@ -96,7 +108,7 @@ class Galaga < Gosu::Window
     @shots.each do |shot|
       shot.draw
     end
-
+    @enemy1.draw
     @player1.draw
   end
 end
