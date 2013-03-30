@@ -2,15 +2,23 @@ require "bundler"
 Bundler.require(:default)
 
 puts "Starting up!"
-class Shot
+class Sprite
   attr_accessor  :x, :y
   def initialize(x,y, window)
     @x=x
     @y=y
     @window =window
-    @shot_image = Gosu::Image.new(window, "shot.png" , true)
   end
+  def draw
+    @image.draw(@x, @y,0)
+  end
+end
 
+class Shot < Sprite
+  def initialize(x,y, window)
+    @image = Gosu::Image.new(window, "shot.png" , true)
+    super
+  end
   def update
     @y -=5
     if @y <=0
@@ -18,10 +26,32 @@ class Shot
     end
   end
 
-  def draw
-    @shot_image.draw(@x, @y,0)
+end
+class Player < Sprite
+  def initialize(x,y, window)
+    @image = Gosu::Image.new(window, "ship.png" , true)
+    super
+  end
+
+  def update
+    if @window.button_down? Gosu::KbLeft
+      @x -= 3
+    end
+    if @window.button_down? Gosu::KbRight
+      @x += 3
+    end
+
+    if @x <=0
+      @x = 0
+    end
+
+    if @x >= 640 - 19
+      @x = 640-19
+    end
   end
 end
+
+
 
 class Galaga < Gosu::Window
   attr_accessor :shots
@@ -32,8 +62,7 @@ class Galaga < Gosu::Window
     @shots = []
     @theme = Gosu::Sample.new(self, "Theme.mp3")
     @shot_sound = Gosu::Sample.new(self, "shot_sound.mp3")
-    @ship_image = Gosu::Image.new(self, "ship.png" , true)
-    @player_x = 320
+    @player1 = Player.new(320, 480-19, self)
     @theme.play
   end
 
@@ -42,29 +71,15 @@ class Galaga < Gosu::Window
       close
     end
 
-    if button_down? Gosu::KbLeft
-      @player_x -= 3
-    end
-    if button_down? Gosu::KbRight
-      @player_x += 3
-    end
-
-    if @player_x <=0
-      @player_x = 0
-    end
-
-    if @player_x >= 640 - 19
-      @player_x = 640-19
-    end
-
     @shots.each do |shot|
-        shot.update
+      shot.update
     end
 
+    @player1.update
   end
 
   def shoot
-    @shots.push(Shot.new(@player_x+9, 480-19, self))
+    @shots.push(Shot.new(@player1.x+9, 480-19, self))
     @shot_sound.play
   end
 
@@ -78,10 +93,11 @@ class Galaga < Gosu::Window
   end
 
   def draw
-    @ship_image.draw(@player_x,480-19,0)
     @shots.each do |shot|
       shot.draw
     end
+
+    @player1.draw
   end
 end
 
