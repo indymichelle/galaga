@@ -59,6 +59,7 @@ class Enemy < Sprite
     super
   end
 
+
   def update
     @x += Math.sin(Time.now.to_f * 6) * 4
     @y += Math.cos(Time.now.to_f * 4) * 4
@@ -78,8 +79,11 @@ class Galaga < Gosu::Window
     @theme = Gosu::Sample.new(self, "Theme.mp3")
     @shot_sound = Gosu::Sample.new(self, "shot_sound.mp3")
     @player1 = Player.new(320, 480-19, self)
-    @enemy1 = Enemy.new(320, 320,self)
     @theme.play
+    @enemies =[]
+    5.times do
+      @enemies.push(Enemy.new(rand(width), rand(height) ,self))
+    end
   end
 
   def update
@@ -91,7 +95,10 @@ class Galaga < Gosu::Window
       shot.update
     end
 
-    @enemy1.update
+    @enemies.each do |enemy|
+      enemy.update
+    end
+
     @player1.update
   end
 
@@ -113,7 +120,9 @@ class Galaga < Gosu::Window
     @shots.each do |shot|
       shot.draw
     end
-    @enemy1.draw
+    @enemies.each do |enemy|
+      enemy.draw
+    end
     @player1.draw
   end
 end
