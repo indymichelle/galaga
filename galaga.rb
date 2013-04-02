@@ -121,7 +121,9 @@ class Galaga < Gosu::Window
 
           if (enemy.y1..enemy.y2).include?(shot.y)
             @enemies.delete(enemy)
+            @shots.delete(shot)
           end
+
         end
       end
     end
