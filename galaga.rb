@@ -14,6 +14,22 @@ class Sprite
   end
   def update
   end
+
+  def x1
+    @x
+  end
+
+  def x2
+    @x+ (@image.width)
+  end
+
+  def y2
+    @y
+  end
+
+  def y1
+    @y - @image.height
+  end
 end
 
 class Shot < Sprite
@@ -61,8 +77,8 @@ class Enemy < Sprite
 
 
   def update
-    @x += Math.sin(Time.now.to_f * 6) * 4
-    @y += Math.cos(Time.now.to_f * 4) * 4
+   # @x += Math.sin(Time.now.to_f * 6) * 4
+   # @y += Math.cos(Time.now.to_f * 4) * 4
   end
 end
 
@@ -97,6 +113,17 @@ class Galaga < Gosu::Window
 
     @enemies.each do |enemy|
       enemy.update
+    end
+
+    @shots.each do | shot |
+      @enemies.each do |enemy|
+        if (enemy.x1..enemy.x2).include?(shot.x)
+
+          if (enemy.y1..enemy.y2).include?(shot.y)
+            @enemies.delete(enemy)
+          end
+        end
+      end
     end
 
     @player1.update
