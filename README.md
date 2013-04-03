@@ -6,3 +6,5 @@ A work-in-progress of Galaga with Ruby/Gosu.
 bundle install     # install dependencies
 ruby galaga.rb     # run the game!
 ```
+
+![Screenshot](screenshot.png)
