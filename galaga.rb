@@ -94,11 +94,12 @@ class Galaga < Gosu::Window
     @shots = []
     @theme = Gosu::Sample.new(self, "Theme.mp3")
     @shot_sound = Gosu::Sample.new(self, "shot_sound.mp3")
+    @kill_sound = Gosu::Sample.new(self, "kill.mp3")
     @player1 = Player.new(320, 480-19, self)
     @theme.play
     @enemies =[]
-    5.times do
-      @enemies.push(Enemy.new(rand(width), rand(height) ,self))
+    200.times do
+      @enemies.push(Enemy.new(rand(width-12), rand(height-30) ,self))
     end
   end
 
@@ -122,6 +123,7 @@ class Galaga < Gosu::Window
           if (enemy.y1..enemy.y2).include?(shot.y)
             @enemies.delete(enemy)
             @shots.delete(shot)
+            @kill_sound.play
           end
 
         end
