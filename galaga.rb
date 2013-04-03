@@ -31,7 +31,7 @@ end
 
 class Player < Sprite
   def initialize(x,y, window)
-    @image = Gosu::Image.new(window, "ship.png" , true)
+    @image = Gosu::Image.new(window, "rainbow-dash.png" , true)
     super
   end
 
@@ -55,7 +55,7 @@ end
 
 class Enemy < Sprite
   def initialize(x,y,window)
-    @image = Gosu::Image.new(window, "red-ship.png", true)
+    @image = Gosu::Image.new(window, "rarity.png", true)
     super
   end
 
