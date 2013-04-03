@@ -37,10 +37,10 @@ class Player < Sprite
 
   def update
     if @window.button_down? Gosu::KbLeft
-      @x -= 3
+      @x -= 4
     end
     if @window.button_down? Gosu::KbRight
-      @x += 3
+      @x += 4
     end
 
     if @x <=0
