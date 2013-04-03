@@ -47,16 +47,16 @@ end
 
 class Player < Sprite
   def initialize(x,y, window)
-    @image = Gosu::Image.new(window, "ship.png" , true)
+    @image = Gosu::Image.new(window, "rainbow-dash.png" , true)
     super
   end
 
   def update
     if @window.button_down? Gosu::KbLeft
-      @x -= 3
+      @x -= 4
     end
     if @window.button_down? Gosu::KbRight
-      @x += 3
+      @x += 4
     end
 
     if @x <=0
@@ -71,7 +71,7 @@ end
 
 class Enemy < Sprite
   def initialize(x,y,window)
-    @image = Gosu::Image.new(window, "red-ship.png", true)
+    @image = Gosu::Image.new(window, "rarity.png", true)
     super
   end
 
