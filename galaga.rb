@@ -1,13 +1,13 @@
 require "bundler"
 Bundler.require(:default)
 
-puts "Starting up!"
 class Sprite
   attr_accessor  :x, :y
-  def initialize(x,y, window)
-    @x=x
-    @y=y
-    @window =window
+
+  def initialize(x, y, window)
+    @x      = x
+    @y      = y
+    @window = window
   end
 
   def draw
@@ -37,10 +37,12 @@ end
 
 class Shot < Sprite
   SHOTSPEED = 5
-  def initialize(x,y, window)
+
+  def initialize(x, y, window)
     @images = [Gosu::Image.new(window, "shot.png" , true)]
     super
   end
+
   def update
     @y -= SHOTSPEED
     if @y <= -SHOTSPEED
@@ -52,17 +54,17 @@ end
 class Player < Sprite
   attr_accessor :score
 
-  def initialize(x,y, window)
+  def initialize(x, y, window)
     @images = [Gosu::Image.new(window, "ship.png" , true)]
     self.score = 0
     super
   end
 
   def update
-    if @window.button_down? Gosu::KbLeft
+    if @window.button_down?(Gosu::KbLeft)
       @x -= 3
     end
-    if @window.button_down? Gosu::KbRight
+    if @window.button_down?(Gosu::KbRight)
       @x += 3
     end
 
@@ -78,12 +80,12 @@ end
 
 class Enemy < Sprite
   attr_accessor :point_value
+
   def initialize(x,y,window)
     @images = [Gosu::Image.new(window, "red-ship.png", true), Gosu::Image.new(window, "red-ship-2.png", true)]
     self.point_value = 10
     super
   end
-
 
   def update
    # @x += Math.sin(Time.now.to_f * 6) * 4
@@ -117,12 +119,12 @@ class Explosion
     end
   end
 
-  def done?(eval_at = Time.now)
-    (eval_at.to_i - @initialized_at) > @how_long
+  def done?
+    (Time.now.to_f - @initialized_at) > @how_long
   end
 
   def draw
-    percentage_complete = ((Time.now.to_f - @initialized_at) / @how_long.to_f)
+    percentage_complete = (Time.now.to_f - @initialized_at) / @how_long.to_f
 
     # The distance away from the original explosion point to draw each bit
     magnitude = percentage_complete * @exploderation
@@ -154,11 +156,12 @@ end
 
 class StarField
   STARCOUNT = 30
+
   def initialize(window)
     @window         = window
     @initialized_at = Time.now.to_f
-    @pxs= []
-    @pys= []
+    @pxs            = []
+    @pys            = []
     STARCOUNT.times do
       @pxs.push(rand(@window.width))
       @pys.push(rand(@window.height))
@@ -167,7 +170,7 @@ class StarField
 
   def update
     STARCOUNT.times do |index|
-      if index%2 == 0
+      if index % 2 == 0
         @pys[index] +=1
       else
         @pys[index] += 0.5
@@ -180,24 +183,22 @@ class StarField
   end
 
   def draw
-     STARCOUNT.times do |index|
+    STARCOUNT.times do |index|
       @color = Gosu::Color.argb(0xffffffff)
-      if (@pxs[index] + 15*Time.now.to_f) % 10 < 8
+      if (@pxs[index] + 15 * Time.now.to_f) % 10 < 8
         @window.draw_pixel( @pxs[index], @pys[index], @color)
       end
-     end
+    end
   end
-
 end
 
 
-
-
-
 class Galaga < Gosu::Window
-  attr_accessor :shots
   WIDTH  = 640
   HEIGHT = 480
+
+  attr_accessor :shots
+
   def initialize
     super(WIDTH, HEIGHT, false)
     self.caption = "Galaga"
@@ -213,12 +214,12 @@ class Galaga < Gosu::Window
     @enemies =[]
     @explosions = []
     200.times do
-      @enemies.push(Enemy.new(rand(width-12), rand(height-30) ,self))
+      @enemies.push(Enemy.new(rand(WIDTH-12), rand(HEIGHT-30), self))
     end
   end
 
   def update
-    if button_down? Gosu::KbEscape
+    if button_down?(Gosu::KbEscape)
       close
     end
 
@@ -268,10 +269,10 @@ class Galaga < Gosu::Window
   end
 
   def draw_pixel (px, py, color)
-    draw_quad(px, py, color, # lower left
-                        px, py + 1, color,  # upper left
-                        px + 1, py + 1, color,  # upper right
-                        px + 1, py, color) # lower right
+    draw_quad(px,     py,     color, # lower left
+              px,     py + 1, color, # upper left
+              px + 1, py + 1, color, # upper right
+              px + 1, py,     color) # lower right
   end
 
 
@@ -291,5 +292,6 @@ class Galaga < Gosu::Window
   end
 end
 
+puts "Starting up!"
 window = Galaga.new
 window.show
