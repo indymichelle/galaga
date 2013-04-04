@@ -9,9 +9,12 @@ class Sprite
     @y=y
     @window =window
   end
+
   def draw
-    @image.draw(@x, @y,0)
+    @image_index = Gosu::milliseconds / 350 % @images.size
+    @image = @images[@image_index].draw(@x, @y, 0)
   end
+
   def update
   end
 
@@ -20,7 +23,7 @@ class Sprite
   end
 
   def x2
-    @x+ (@image.width)
+    @x+ (@images[@image_index].width)
   end
 
   def y2
@@ -28,13 +31,13 @@ class Sprite
   end
 
   def y1
-    @y - @image.height
+    @y - @images[@image_index].height
   end
 end
 
 class Shot < Sprite
   def initialize(x,y, window)
-    @image = Gosu::Image.new(window, "shot.png" , true)
+    @images = [Gosu::Image.new(window, "shot.png" , true)]
     super
   end
   def update
@@ -49,7 +52,7 @@ class Player < Sprite
   attr_accessor :score
 
   def initialize(x,y, window)
-    @image = Gosu::Image.new(window, "ship.png" , true)
+    @images = [Gosu::Image.new(window, "ship.png" , true)]
     self.score = 0
     super
   end
@@ -75,7 +78,7 @@ end
 class Enemy < Sprite
   attr_accessor :point_value
   def initialize(x,y,window)
-    @image = Gosu::Image.new(window, "red-ship.png", true)
+    @images = [Gosu::Image.new(window, "red-ship.png", true), Gosu::Image.new(window, "red-ship-2.png", true)]
     self.point_value = 10
     super
   end
