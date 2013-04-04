@@ -36,13 +36,14 @@ class Sprite
 end
 
 class Shot < Sprite
+  SHOTSPEED = 5
   def initialize(x,y, window)
     @images = [Gosu::Image.new(window, "shot.png" , true)]
     super
   end
   def update
-    @y -=5
-    if @y <=-5
+    @y -= SHOTSPEED
+    if @y <= -SHOTSPEED
       @window.shots.delete(self)
     end
   end
