@@ -101,10 +101,10 @@ class Explosion
     @explodiness    = 20
 
     # The distance bits should travel
-    @exploderation  = 45
+    @exploderation  = 40
 
     # How long should the effect last
-    @how_long       = 1.25
+    @how_long       = 0.75
 
     # Gosu::Color::RED, http://www.libgosu.org/rdoc/Gosu/Color.html
     @color          = Gosu::Color.argb(0xffff0000)
@@ -113,7 +113,7 @@ class Explosion
     @directions     = @explodiness.times.collect do |i|
       angle = (i / @explodiness.to_f) * (Math::PI * 2)
       cos, sin = Math.cos(angle), Math.sin(angle)
-      [cos - sin , sin  + cos]
+      [sin , cos]
     end
   end
 
@@ -137,8 +137,8 @@ class Explosion
       dx, dy = vector
 
       # Move away by magnitude
-      dx *= magnitude
-      dy *= magnitude
+      dx *= magnitude*rand
+      dy *= magnitude*rand
 
       # Translate from explosion original position
       px, py = @origin[0] + dx, @origin[1] + dy
