@@ -42,7 +42,7 @@ class Shot < Sprite
   end
   def update
     @y -=5
-    if @y <=0
+    if @y <=-5
       @window.shots.delete(self)
     end
   end
