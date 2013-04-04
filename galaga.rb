@@ -152,6 +152,43 @@ class Explosion
   end
 end
 
+class StarField
+  STARCOUNT = 30
+  def initialize(window)
+    @window         = window
+    @initialized_at = Time.now.to_f
+    @pxs= []
+    @pys= []
+    STARCOUNT.times do
+      @pxs.push(rand(@window.width))
+      @pys.push(rand(@window.height))
+    end
+  end
+
+  def update
+    STARCOUNT.times do |index|
+      if index%2 == 0
+        @pys[index] +=1
+      else
+        @pys[index] += 0.5
+      end
+      if @pys[index] >= 480
+        @pys[index] = 0
+        @pxs[index] = rand(@window.width)
+      end
+    end
+  end
+
+  def draw
+     STARCOUNT.times do |index|
+      @color = Gosu::Color.argb(0xffffffff)
+      if (@pxs[index] + 15*Time.now.to_f) % 10 < 8
+        @window.draw_pixel( @pxs[index], @pys[index], @color)
+      end
+     end
+  end
+
+end
 
 
 
@@ -165,11 +202,12 @@ class Galaga < Gosu::Window
     super(WIDTH, HEIGHT, false)
     self.caption = "Galaga"
 
+    @starfield = StarField.new(self)
     @shots = []
     @theme = Gosu::Sample.new(self, "Theme.mp3")
     @shot_sound = Gosu::Sample.new(self, "shot_sound.mp3")
     @kill_sound = Gosu::Sample.new(self, "kill.mp3")
-    @player1 = Player.new(320, 480-19, self)
+    @player1 = Player.new(WIDTH/2, HEIGHT-19, self)
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
     @theme.play
     @enemies =[]
@@ -191,6 +229,8 @@ class Galaga < Gosu::Window
     @enemies.each do |enemy|
       enemy.update
     end
+
+    @starfield.update
 
     @shots.each do | shot |
       @enemies.each do |enemy|
@@ -227,8 +267,17 @@ class Galaga < Gosu::Window
     end
   end
 
+  def draw_pixel (px, py, color)
+    draw_quad(px, py, color, # lower left
+                        px, py + 1, color,  # upper left
+                        px + 1, py + 1, color,  # upper right
+                        px + 1, py, color) # lower right
+  end
+
+
   def draw
     @font.draw("SCORE: #{@player1.score}", WIDTH/2, 10, 10, 1.0, 1.0, 0xffffff00)
+    @starfield.draw
     @shots.each do |shot|
       shot.draw
     end
