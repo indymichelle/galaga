@@ -3,6 +3,7 @@ Bundler.require(:default)
 
 puts "Starting up!"
 class Sprite
+  ANIMATION_FRAME_DISPLAY_TIME_IN_MS = 350
   attr_accessor  :x, :y
   def initialize(x,y, window)
     @x=x
@@ -11,7 +12,7 @@ class Sprite
   end
 
   def draw
-    @image_index = Gosu::milliseconds / 350 % @images.size
+    @image_index = Gosu::milliseconds / ANIMATION_FRAME_DISPLAY_TIME_IN_MS % @images.size
     @image = @images[@image_index].draw(@x, @y, 0)
   end
 
