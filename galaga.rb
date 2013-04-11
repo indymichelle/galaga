@@ -51,6 +51,22 @@ class Shot < Sprite
   end
 end
 
+class EnemyShot < Sprite
+  SHOTSPEED = -5
+
+  def initialize(x, y, window)
+    @images = [Gosu::Image.new(window, "enemyshot.png" , true)]
+    super
+  end
+
+  def update
+    @y -= SHOTSPEED
+    if @y >= @window.height
+      @window.enemyshots.delete(self)
+    end
+  end
+end
+
 class Player < Sprite
   attr_accessor :score
 
@@ -90,7 +106,15 @@ class Enemy < Sprite
   def update
    # @x += Math.sin(Time.now.to_f * 6) * 4
    # @y += Math.cos(Time.now.to_f * 4) * 4
+
+   if Time.now.to_f - @lastshot.to_f > 2
+    if @window.enemyshots.size <3
+      @window.enemyshoot
+      @lastshot = Time.now.to_f
+    end
   end
+end
+
 end
 
 class Explosion
@@ -155,7 +179,7 @@ class Explosion
 end
 
 class StarField
-  STARCOUNT = 30
+  STARCOUNT = 32
 
   def initialize(window)
     @window         = window
@@ -197,7 +221,7 @@ class Galaga < Gosu::Window
   WIDTH  = 640
   HEIGHT = 480
 
-  attr_accessor :shots
+  attr_accessor :shots, :enemyshots
 
   def initialize
     super(WIDTH, HEIGHT, false)
@@ -205,6 +229,7 @@ class Galaga < Gosu::Window
 
     @starfield = StarField.new(self)
     @shots = []
+    @enemyshots = []
     @theme = Gosu::Sample.new(self, "Theme.mp3")
     @shot_sound = Gosu::Sample.new(self, "shot_sound.mp3")
     @kill_sound = Gosu::Sample.new(self, "kill.mp3")
@@ -224,6 +249,10 @@ class Galaga < Gosu::Window
     end
 
     @shots.each do |shot|
+      shot.update
+    end
+
+    @enemyshots.each do |shot|
       shot.update
     end
 
@@ -268,6 +297,14 @@ class Galaga < Gosu::Window
     end
   end
 
+  def enemyshoot
+    @enemyshooter = @enemies.sample
+    @enemyshots.push(EnemyShot.new(@enemyshooter.x + 5, @enemyshooter.y, self))
+    @shot_sound.play
+  end
+
+
+
   def draw_pixel (px, py, color)
     draw_quad(px,     py,     color, # lower left
               px,     py + 1, color, # upper left
@@ -279,6 +316,9 @@ class Galaga < Gosu::Window
   def draw
     @font.draw("SCORE: #{@player1.score}", WIDTH/2, 10, 10, 1.0, 1.0, 0xffffff00)
     @starfield.draw
+    @enemyshots.each do |shot|
+      shot.draw
+    end
     @shots.each do |shot|
       shot.draw
     end
