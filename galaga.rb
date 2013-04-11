@@ -1,8 +1,6 @@
 require "bundler"
 Bundler.require(:default)
 
-SHIP_COUNT = 20
-
 class Sprite
   attr_accessor  :x, :y
 
@@ -74,18 +72,9 @@ class Player < Sprite
       @x = 0
     end
 
-    if @x >= 640 - 19 * SHIP_COUNT
-      @x = 640-19 * SHIP_COUNT
+    if @x >= 640 - 19
+      @x = 640-19
     end
-  end
-
-  def draw
-    original_x = @x
-    SHIP_COUNT.times do |i|
-      @x = original_x + 19*i
-      super
-    end
-    @x = original_x
   end
 end
 
@@ -266,16 +255,14 @@ class Galaga < Gosu::Window
   end
 
   def shoot
-    SHIP_COUNT.times do |i|
-      @shots.push(Shot.new(@player1.x+9 + 19*i, 480-19, self))
-    end
+    @shots.push(Shot.new(@player1.x+9, 480-19, self))
     @shot_sound.play
   end
 
   def button_down(id)
     case id
     when Gosu::KbSpace
-      if @shots.map(&:y).uniq.size < 3
+      if @shots.size <3
         shoot
       end
     end
