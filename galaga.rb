@@ -8,6 +8,7 @@ class Sprite
     @x      = x
     @y      = y
     @window = window
+    @image_index = 0
   end
 
   def draw
@@ -33,6 +34,16 @@ class Sprite
   def y1
     @y - @images[@image_index].height
   end
+
+  def hit?(other)
+    if (other.x1..other.x2).include?(@x)
+      if (other.y1..other.y2).include?(@y)
+        return true
+      end
+    end
+  end
+
+
 end
 
 class Shot < Sprite
@@ -264,15 +275,22 @@ class Galaga < Gosu::Window
 
     @shots.each do | shot |
       @enemies.each do |enemy|
-        if (enemy.x1..enemy.x2).include?(shot.x)
-          if (enemy.y1..enemy.y2).include?(shot.y)
-            @explosions << Explosion.new(enemy.x1, enemy.y1, self)
-            @enemies.delete(enemy)
-            @shots.delete(shot)
-            @kill_sound.play
-            @player1.score += enemy.point_value
-          end
+        if shot.hit?(enemy)
+          @explosions << Explosion.new(enemy.x1, enemy.y1, self)
+          @enemies.delete(enemy)
+          @shots.delete(shot)
+          @kill_sound.play
+          @player1.score += enemy.point_value
         end
+      end
+    end
+
+    @enemyshots.each do | shot|
+      if shot.hit?(@player1)
+        @explosions << Explosion.new(@player1.x1, @player1.y1, self)
+        #@player1.delete
+        @enemyshots.delete(shot)
+        @kill_sound.play
       end
     end
 
