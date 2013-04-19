@@ -79,11 +79,12 @@ class EnemyShot < Sprite
 end
 
 class Player < Sprite
-  attr_accessor :score
+  attr_accessor :score, :alive
 
   def initialize(x, y, window)
     @images = [Gosu::Image.new(window, "ship.png" , true)]
     self.score = 0
+    @alive = true
     super
   end
 
@@ -103,6 +104,7 @@ class Player < Sprite
       @x = 640-19
     end
   end
+
 end
 
 class Enemy < Sprite
@@ -286,9 +288,9 @@ class Galaga < Gosu::Window
     end
 
     @enemyshots.each do | shot|
-      if shot.hit?(@player1)
+      if @player1.alive && shot.hit?(@player1)
         @explosions << Explosion.new(@player1.x1, @player1.y1, self)
-        #@player1.delete
+        @player1.alive = false
         @enemyshots.delete(shot)
         @kill_sound.play
       end
@@ -297,8 +299,9 @@ class Galaga < Gosu::Window
     @explosions.delete_if do |explosion|
       explosion.done?
     end
-
-    @player1.update
+    if @player1.alive
+      @player1.update
+    end
   end
 
   def shoot
@@ -309,7 +312,7 @@ class Galaga < Gosu::Window
   def button_down(id)
     case id
     when Gosu::KbSpace
-      if @shots.size <3
+      if @shots.size <3 && @player1.alive
         shoot
       end
     end
@@ -346,7 +349,9 @@ class Galaga < Gosu::Window
     @explosions.each do |boom|
       boom.draw
     end
-    @player1.draw
+    if @player1.alive
+      @player1.draw
+    end
   end
 end
 
