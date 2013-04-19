@@ -50,7 +50,7 @@ class Shot < Sprite
   SHOTSPEED = 5
 
   def initialize(x, y, window)
-    @images = [Gosu::Image.new(window, "shot.png" , true)]
+    @images = [Gosu::Image.new(window, "images/shot.png" , true)]
     super
   end
 
@@ -66,7 +66,7 @@ class EnemyShot < Sprite
   SHOTSPEED = -5
 
   def initialize(x, y, window)
-    @images = [Gosu::Image.new(window, "enemyshot.png" , true)]
+    @images = [Gosu::Image.new(window, "images/enemyshot.png" , true)]
     super
   end
 
@@ -82,7 +82,7 @@ class Player < Sprite
   attr_accessor :score, :alive
 
   def initialize(x, y, window)
-    @images = [Gosu::Image.new(window, "ship.png" , true)]
+    @images = [Gosu::Image.new(window, "images/ship.png" , true)]
     self.score = 0
     @alive = true
     super
@@ -111,7 +111,7 @@ class Enemy < Sprite
   attr_accessor :point_value
 
   def initialize(x,y,window)
-    @images = [Gosu::Image.new(window, "red-ship.png", true), Gosu::Image.new(window, "red-ship-2.png", true)]
+    @images = [Gosu::Image.new(window, "images/red-ship.png", true), Gosu::Image.new(window, "images/red-ship-2.png", true)]
     self.point_value = 10
     super
   end
@@ -243,9 +243,9 @@ class Galaga < Gosu::Window
     @starfield = StarField.new(self)
     @shots = []
     @enemyshots = []
-    @theme = Gosu::Sample.new(self, "Theme.mp3")
-    @shot_sound = Gosu::Sample.new(self, "shot_sound.mp3")
-    @kill_sound = Gosu::Sample.new(self, "kill.mp3")
+    @theme = Gosu::Sample.new(self, "sounds/Theme.mp3")
+    @shot_sound = Gosu::Sample.new(self, "sounds/shot_sound.mp3")
+    @kill_sound = Gosu::Sample.new(self, "sounds/kill.mp3")
     @player1 = Player.new(WIDTH/2, HEIGHT-19, self)
     @font = Gosu::Font.new(self, Gosu::default_font_name, 20)
     @theme.play
