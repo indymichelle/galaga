@@ -32,8 +32,16 @@ class Galaga < Gosu::Window
     @theme.play
     @enemies =[]
     @explosions = []
-    200.times do
-      @enemies.push(Enemy.new(rand(WIDTH-12), rand(HEIGHT-30), self))
+    margin = 40
+    rightside = WIDTH - margin - 16
+    @enemy_grid_width = 20
+    @enemy_grid_height = 5
+    @enemy_grid_width.times do |index_x|
+      x = index_x*(rightside - margin)/(@enemy_grid_width-1)+margin
+      @enemy_grid_height.times do |index_y|
+        y = index_y*margin + margin
+        @enemies.push(Enemy.new(x, y, self))
+      end
     end
   end
 
