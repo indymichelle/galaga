@@ -78,7 +78,7 @@ class Galaga < Gosu::Window
 
     @enemyshots.each do | shot|
       if @player1.alive && shot.hit?(@player1)
-        @explosions << Explosion.new(@player1.x1, @player1.y1, self)
+        @explosions << Explosion.new(@player1.x1 + 8, @player1.y1 + 19, self)
         @player1.alive = false
         @enemyshots.delete(shot)
         @kill_sound.play
